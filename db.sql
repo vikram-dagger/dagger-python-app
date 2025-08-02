@@ -1,3 +1,4 @@
+# drop table
 DROP TABLE books;
 
 CREATE TABLE books (
