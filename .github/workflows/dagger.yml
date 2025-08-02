@@ -1,0 +1,24 @@
+name: dagger
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  dagger:
+    name: dagger
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Test
+        id: test
+        uses: dagger/dagger-for-github@8.0.0
+        with:
+          version: "0.18.14"
+          verb: call
+          args: test
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
