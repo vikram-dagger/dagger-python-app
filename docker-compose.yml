@@ -8,12 +8,15 @@ services:
     environment:
       - DATABASE_URL=postgresql://app_user:secret@db/app_db
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    networks:
+      - app_network
 
   db:
-    image: postgres:15
+    image: postgres:15-alpine
     container_name: fastapi_db
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_DB: app_db
       POSTGRES_USER: app_user
@@ -22,7 +25,19 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./db.sql:/docker-entrypoint-initdb.d/db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_user -d app_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
 
 volumes:
   postgres_data:
+    driver: local
