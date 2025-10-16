@@ -7,11 +7,6 @@ from .main import create_app
 from .dependencies import get_db, database_url
 from .models import Base
 
-@pytest.fixture(autouse=True)
-def clean_books_table(test_db):
-    """Truncate books table before each test to avoid unique constraint errors."""
-    test_db.execute("TRUNCATE TABLE books RESTART IDENTITY CASCADE;")
-    test_db.commit()
 
 @pytest.fixture(scope="session")
 def test_engine():
