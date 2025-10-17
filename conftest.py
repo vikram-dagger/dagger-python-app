@@ -1,5 +1,6 @@
 
 import pytest
+import os
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker
 from fastapi.testclient import TestClient
@@ -7,11 +8,12 @@ from .main import create_app
 from .dependencies import get_db, database_url
 from .models import Base
 
+TEST_DATABASE_URL = os.getenv("TEST_DATABASE_URL", "postgresql://app_user:secret@db/app_db_test")
 
 @pytest.fixture(scope="session")
 def test_engine():
     """Create test database engine"""
-    test_engine = create_engine(database_url)
+    test_engine = create_engine(TEST_DATABASE_URL)
     Base.metadata.create_all(bind=test_engine)
     yield test_engine
     Base.metadata.drop_all(bind=test_engine)
