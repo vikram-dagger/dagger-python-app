@@ -22,6 +22,6 @@ curl http://localhost:8000/api/books/
 ## Run tests
 
 ```
-docker exec -it fastapi_app bash
+docker exec -it fastapi_app pytest
 pytest # in the container shell
 ```
